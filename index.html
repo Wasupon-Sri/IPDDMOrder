@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPD DM Management Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Sarabun', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            border: 1px solid #d1d5db;
+            padding: 1rem;
+            background-color: #fff;
+        }
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .form-section {
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            height: 100%;
+        }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .section-header h3 {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+        .input-field {
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            padding: 0.3rem 0.5rem;
+            width: 55px;
+            text-align: center;
+        }
+        .text-input-field {
+            width: auto;
+            flex-grow: 1;
+        }
+        .alert-input {
+            border-color: #fca5a5;
+            color: #b91c1c;
+            font-weight: 500;
+        }
+        .insulin-select {
+            border: 1px solid #d1d5db;
+            border-radius: 0.25rem;
+            padding: 0.3rem;
+        }
+        .time-checkboxes {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        .add-insulin-btn {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            border: 1px solid #c7d2fe;
+            border-radius: 9999px;
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .add-insulin-btn:hover {
+            background-color: #c7d2fe;
+        }
+        .remove-insulin-btn {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: none;
+            border-radius: 9999px;
+            width: 20px;
+            height: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+        .hidden {
+            display: none;
+        }
+
+        @media print {
+            body {
+                background-color: #fff;
+                font-size: 10pt;
+            }
+            .no-print {
+                display: none;
+            }
+            .print-container {
+                box-shadow: none;
+                border: none;
+                margin: 0;
+                padding: 0;
+                max-width: 100%;
+            }
+            .form-container {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                padding: 0;
+                border: none;
+            }
+             .form-section {
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+             }
+            .input-field, .insulin-select, .text-input-field {
+                padding: 0.1rem;
+                font-size: 9pt;
+            }
+            .section-header h3 {
+                font-size: 10pt;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-lg print-container">
+        <!-- Header -->
+        <header class="text-center mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold text-gray-800">DOCTOR'S ORDERS</h1>
+            <h2 class="text-lg md:text-xl text-gray-600">Rajavithi Hospital</h2>
+        </header>
+        
+        <div class="form-container">
+            <!-- Left Column: ONE DAY -->
+            <div class="form-column">
+                <div class="form-section">
+                    <div class="section-header">
+                        <h3>One Day</h3>
+                        <input type="date" class="border p-1 rounded-md text-sm" id="one-day-date">
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-indigo-700 mb-2">Endocrine Pre-Op Order</h4>
+                        <div class="space-y-3 text-sm">
+                            <p>1. If NPO after midnight, start IV dextrose 4-6 gm/h at 6.00 u.</p>
+                            <div>
+                                <p>2. DTX at 6.00 u.</p>
+                                <div class="pl-4 space-y-2 mt-1">
+                                    <p class="flex items-center gap-1.5 flex-wrap">- If DTX &lt; <input type="number" id="preop_dtx_surg" class="input-field" value="180"> go on surgery</p>
+                                    <div id="pre-op-insulin-1" class="space-y-2">
+                                        <p class="flex items-center gap-1.5 flex-wrap">- If DTX &gt; <input type="number" id="preop_dtx_high_1" class="input-field" value="180">, give: <button class="add-insulin-btn" onclick="addInsulin('pre-op-insulin-1')">+ Add</button></p>
+                                    </div>
+                                    <div id="pre-op-insulin-2" class="space-y-2">
+                                        <p class="flex items-center gap-1.5 flex-wrap">- If DTX &gt; <input type="number" id="preop_dtx_high_2" class="input-field" value="220">, give: <button class="add-insulin-btn" onclick="addInsulin('pre-op-insulin-2')">+ Add</button></p>
+                                    </div>
+                                    <p class="text-red-600 font-medium flex items-center gap-1.5 flex-wrap">
+                                        - If DTX &gt; <input type="number" id="preop_alert_high" class="input-field alert-input" value="250">
+                                        or &lt; <input type="number" id="preop_alert_low" class="input-field alert-input" value="80">
+                                        please notify
+                                    </p>
+                                </div>
+                            </div>
+                             <div class="flex items-center gap-2 flex-wrap">
+                                <p>3. งดยาเบาหวานชนิดรับประทาน:</p>
+                                <input type="text" id="preop_hold_meds_text" class="input-field text-input-field" placeholder="ระบุยา (e.g., Metformin)">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: CONTINUATION -->
+            <div class="form-column">
+                <div class="form-section">
+                     <div class="section-header">
+                        <h3>Continuation</h3>
+                        <input type="date" class="border p-1 rounded-md text-sm" id="continuation-date">
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-indigo-700 mb-2">Continuation (Eating / Feed)</h4>
+                         <div class="space-y-3 text-sm">
+                            <p>เจาะ DTX bid ac เช้า เย็น</p>
+                            <p class="flex items-center gap-1.5 flex-wrap">
+                                Keep DTX <input type="number" id="cont_keep_low" class="input-field" value="80"> - <input type="number" id="cont_keep_high" class="input-field" value="180"> mg/dl
+                            </p>
+                            <div class="pl-4 space-y-2 mt-1">
+                                <div id="cont-insulin-1" class="space-y-2">
+                                    <p class="flex items-center gap-1.5 flex-wrap">- If DTX &gt;<input type="number" id="cont_dtx_high_1" class="input-field" value="180"> ให้: <button class="add-insulin-btn" onclick="addInsulin('cont-insulin-1')">+ Add</button></p>
+                                </div>
+                                <div id="cont-insulin-2" class="space-y-2">
+                                    <p class="flex items-center gap-1.5 flex-wrap">- If DTX &gt;<input type="number" id="cont_dtx_high_2" class="input-field" value="250"> ให้: <button class="add-insulin-btn" onclick="addInsulin('cont-insulin-2')">+ Add</button></p>
+                                </div>
+                                <div id="cont-insulin-3" class="space-y-2">
+                                    <p class="flex items-center gap-1.5 flex-wrap" id="cont-insulin-3-p">
+                                        <input type="checkbox" onchange="toggleStrike(this, 'cont-insulin-3-p')" class="mr-1">
+                                        - If DTX &lt;<input type="number" id="cont_dtx_low_1" class="input-field" value="140"> ให้: <button class="add-insulin-btn" onclick="addInsulin('cont-insulin-3')">+ Add</button>
+                                    </p>
+                                </div>
+                            </div>
+                             <p class="text-red-600 font-medium flex items-center gap-1.5 flex-wrap">
+                                - If DTX &lt;<input type="number" id="cont_alert_low" class="input-field alert-input" value="80">
+                                or &gt;<input type="number" id="cont_alert_high" class="input-field alert-input" value="300">
+                                or NPO Pls notify
+                             </p>
+                             <p>- If start steroid notify พร้อมรอบ DTX ครั้งถัดไป</p>
+                         </div>
+                    </div>
+                </div>
+                 <div class="form-section">
+                     <div>
+                        <h4 class="font-semibold text-indigo-700 mb-2">Endocrine Post-Op Order</h4>
+                         <div class="space-y-3 text-sm">
+                            <p>1. ถ้ากินเอง หรือ feed ใช้ scale เดิม continue เพิ่ม</p>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <p>2. ถ้า NPO งดยาเบาหวานชนิดรับประทาน:</p>
+                                <input type="text" id="postop_hold_meds_text" class="input-field text-input-field" placeholder="ระบุยา">
+                            </div>
+                            <div class="pl-4 space-y-2 mt-1">
+                               <p>- ให้ IV dextrose 4 - 6 g/hr</p>
+                               <p>- DTX q 6 hrs 6 12 18 23 u</p>
+
+                               <div class="flex gap-4 my-2">
+                                    <label class="flex items-center"><input type="radio" name="postOpOrderType" value="keepRange" checked onchange="togglePostOpOrder('keepRange')"> Keep DTX Range</label>
+                                    <label class="flex items-center"><input type="radio" name="postOpOrderType" value="scheduled" onchange="togglePostOpOrder('scheduled')"> Scheduled Insulin</label>
+                               </div>
+
+                               <div id="postOpOrderKeepRange">
+                                    <p class="flex items-center gap-1.5 flex-wrap">Keep <input type="number" id="postop_keep_low" class="input-field" value="80">-<input type="number" id="postop_keep_high" class="input-field" value="140"> mg/dl</p>
+                               </div>
+                               <div id="postOpOrderScheduled" class="hidden">
+                                    <div class="flex items-center gap-2 flex-wrap">
+                                        <select class="insulin-select text-xs">
+                                            <option>NPH</option>
+                                            <option>RI</option>
+                                            <option>Biosulin (70/30)</option>
+                                        </select>
+                                        <input type="number" class="input-field text-xs" placeholder="U">
+                                        <span class="text-xs">sc ac at</span>
+                                        <div class="time-checkboxes text-xs">
+                                            <label><input type="checkbox" class="mr-1">6</label>
+                                            <label><input type="checkbox" class="mr-1">12</label>
+                                            <label><input type="checkbox" class="mr-1">18</label>
+                                            <label><input type="checkbox" class="mr-1">23</label>
+                                        </div>
+                                    </div>
+                               </div>
+
+                               <p>- If DTX</p>
+                               <div class="pl-4 space-y-2 mt-1">
+                                    <div id="postop-insulin-1" class="space-y-2">
+                                        <p class="flex items-center gap-1.5 flex-wrap">&gt;<input type="number" id="postop_dtx_high_1" class="input-field" value="140">: <button class="add-insulin-btn" onclick="addInsulin('postop-insulin-1')">+ Add</button></p>
+                                    </div>
+                                    <div id="postop-insulin-2" class="space-y-2">
+                                        <p class="flex items-center gap-1.5 flex-wrap">&gt;<input type="number" id="postop_dtx_high_2" class="input-field" value="180">: <button class="add-insulin-btn" onclick="addInsulin('postop-insulin-2')">+ Add</button></p>
+                                    </div>
+                                     <div id="postop-insulin-3" class="space-y-2">
+                                        <p class="flex items-center gap-1.5 flex-wrap">&gt;<input type="number" id="postop_dtx_high_3" class="input-field" value="250">: <button class="add-insulin-btn" onclick="addInsulin('postop-insulin-3')">+ Add</button></p>
+                                    </div>
+                               </div>
+                               <p class="text-red-600 font-medium flex items-center gap-1.5 flex-wrap">
+                                    If DTX &gt;<input type="number" id="postop_alert_high" class="input-field alert-input" value="300">
+                                    or &lt;<input type="number" id="postop_alert_low" class="input-field alert-input" value="80">
+                                    or on TPN pls notify
+                                </p>
+                            </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <section class="mt-8 text-center no-print space-x-4">
+            <button onclick="window.print()" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors">
+                Print Order
+            </button>
+            <button onclick="resetForm()" class="bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">
+                Reset Form
+            </button>
+        </section>
+
+    </div>
+
+    <!-- Hidden template for insulin input group -->
+    <div id="insulin-template" class="hidden">
+        <div class="flex items-center gap-2 flex-wrap pl-4 my-1 insulin-row">
+            <select class="insulin-select text-xs">
+                <option>NPH</option>
+                <option>RI</option>
+                <option>Biosulin (70/30)</option>
+            </select>
+            <input type="number" class="input-field text-xs" placeholder="U">
+            <span class="text-xs">sc at</span>
+            <div class="time-checkboxes text-xs">
+                <label><input type="checkbox" class="mr-1">6</label>
+                <label><input type="checkbox" class="mr-1">12</label>
+                <label><input type="checkbox" class="mr-1">18</label>
+                <label><input type="checkbox" class="mr-1">23</label>
+            </div>
+            <button class="remove-insulin-btn" onclick="this.parentElement.remove()">x</button>
+        </div>
+    </div>
+
+
+    <script>
+        function setDates() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('one-day-date').value = today;
+            document.getElementById('continuation-date').value = today;
+        }
+
+        function addInsulin(containerId) {
+            const container = document.getElementById(containerId);
+            if(container.querySelectorAll('.insulin-row').length < 2) {
+                const template = document.getElementById('insulin-template');
+                const clone = template.firstElementChild.cloneNode(true);
+                container.appendChild(clone);
+            } else {
+                console.warn("Maximum of 2 insulin types per order line.");
+            }
+        }
+
+        function toggleStrike(checkbox, pId) {
+            const pElement = document.getElementById(pId);
+            const inputs = pElement.querySelectorAll('input[type="number"], button');
+            if (checkbox.checked) {
+                pElement.classList.add('line-through', 'text-gray-400');
+                inputs.forEach(input => input.disabled = true);
+            } else {
+                pElement.classList.remove('line-through', 'text-gray-400');
+                inputs.forEach(input => input.disabled = false);
+            }
+        }
+        
+        function togglePostOpOrder(orderType) {
+            const keepRangeDiv = document.getElementById('postOpOrderKeepRange');
+            const scheduledDiv = document.getElementById('postOpOrderScheduled');
+            if (orderType === 'keepRange') {
+                keepRangeDiv.classList.remove('hidden');
+                scheduledDiv.classList.add('hidden');
+            } else {
+                keepRangeDiv.classList.add('hidden');
+                scheduledDiv.classList.remove('hidden');
+            }
+        }
+
+        function resetForm() {
+            // Remove all dynamically added insulin rows
+            document.querySelectorAll('.insulin-row').forEach(row => row.remove());
+            
+            // Reset all input fields to default values
+            // Pre-Op
+            document.getElementById('preop_dtx_surg').value = 180;
+            document.getElementById('preop_dtx_high_1').value = 180;
+            document.getElementById('preop_dtx_high_2').value = 220;
+            document.getElementById('preop_alert_high').value = 250;
+            document.getElementById('preop_alert_low').value = 80;
+            document.getElementById('preop_hold_meds_text').value = '';
+
+            // Continuation
+            document.getElementById('cont_keep_low').value = 80;
+            document.getElementById('cont_keep_high').value = 180;
+            document.getElementById('cont_dtx_high_1').value = 180;
+            document.getElementById('cont_dtx_high_2').value = 250;
+            document.getElementById('cont_dtx_low_1').value = 140;
+            document.getElementById('cont_alert_low').value = 80;
+            document.getElementById('cont_alert_high').value = 300;
+            const strikeCheckbox = document.querySelector('#cont-insulin-3-p input[type="checkbox"]');
+            if (strikeCheckbox && strikeCheckbox.checked) {
+                strikeCheckbox.checked = false;
+                toggleStrike(strikeCheckbox, 'cont-insulin-3-p');
+            }
+
+            // Post-Op
+            document.getElementById('postop_hold_meds_text').value = '';
+            const keepRangeRadio = document.querySelector('input[name="postOpOrderType"][value="keepRange"]');
+            keepRangeRadio.checked = true;
+            togglePostOpOrder('keepRange');
+            const scheduledDiv = document.getElementById('postOpOrderScheduled');
+            scheduledDiv.querySelector('select').selectedIndex = 0;
+            scheduledDiv.querySelector('input[type="number"]').value = '';
+            scheduledDiv.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('postop_keep_low').value = 80;
+            document.getElementById('postop_keep_high').value = 140;
+            document.getElementById('postop_dtx_high_1').value = 140;
+            document.getElementById('postop_dtx_high_2').value = 180;
+            document.getElementById('postop_dtx_high_3').value = 250;
+            document.getElementById('postop_alert_high').value = 300;
+            document.getElementById('postop_alert_low').value = 80;
+            
+            setDates();
+        }
+
+        window.onload = function() {
+            setDates();
+        }
+    </script>
+</body>
+</html>
+
