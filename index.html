@@ -222,7 +222,7 @@
                                 <input type="text" id="postop_hold_meds_text" class="input-field text-input-field" placeholder="ระบุยา">
                             </div>
                             <div class="pl-4 space-y-2 mt-1">
-                               <p>- ให้ IV dextrose 4 - 6 g/hr</p>
+                               <p class="flex items-center gap-1.5 flex-wrap">- ให้ IV dextrose <input type="text" id="postop_dextrose_rate" class="input-field" value="4-6"> g/hr</p>
                                <p>- DTX q 6 hrs 6 12 18 23 u</p>
 
                                <div class="flex flex-wrap gap-4 my-2">
@@ -379,6 +379,7 @@
             }
 
             // Post-Op
+            document.getElementById('postop_dextrose_rate').value = '4-6';
             document.getElementById('postop_hold_meds_text').value = '';
             const keepRangeRadio = document.querySelector('input[name="postOpOrderType"][value="keepRange"]');
             keepRangeRadio.checked = true;
