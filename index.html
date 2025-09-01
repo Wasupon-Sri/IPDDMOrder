@@ -182,7 +182,10 @@
                     <div>
                         <h4 class="font-semibold text-indigo-700 mb-2">Continuation (Eating / Feed)</h4>
                          <div class="space-y-3 text-sm">
-                            <p>เจาะ DTX bid ac เช้า เย็น</p>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <p>เจาะ DTX:</p>
+                                <input type="text" id="cont_dtx_time" class="input-field text-input-field" value="bid ac เช้า เย็น">
+                            </div>
                             <p class="flex items-center gap-1.5 flex-wrap">
                                 Keep DTX <input type="number" id="cont_keep_low" class="input-field" value="80"> - <input type="number" id="cont_keep_high" class="input-field" value="180"> mg/dl
                             </p>
@@ -361,6 +364,7 @@
             document.getElementById('preop_hold_meds_text').value = '';
 
             // Continuation
+            document.getElementById('cont_dtx_time').value = 'bid ac เช้า เย็น';
             document.getElementById('cont_keep_low').value = 80;
             document.getElementById('cont_keep_high').value = 180;
             document.getElementById('cont_dtx_high_1').value = 180;
