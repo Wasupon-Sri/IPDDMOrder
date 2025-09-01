@@ -11,14 +11,6 @@
             font-family: 'Inter', 'Sarabun', sans-serif;
             background-color: #f0f4f8;
         }
-        .form-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            border: 1px solid #d1d5db;
-            padding: 1rem;
-            background-color: #fff;
-        }
         .form-column {
             display: flex;
             flex-direction: column;
@@ -113,6 +105,7 @@
                 max-width: 100%;
             }
             .form-container {
+                display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 1rem;
                 padding: 0;
@@ -141,7 +134,7 @@
             <h2 class="text-lg md:text-xl text-gray-600">Rajavithi Hospital</h2>
         </header>
         
-        <div class="form-container">
+        <div class="form-container grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Left Column: ONE DAY -->
             <div class="form-column">
                 <div class="form-section">
@@ -229,7 +222,7 @@
                                <p>- ให้ IV dextrose 4 - 6 g/hr</p>
                                <p>- DTX q 6 hrs 6 12 18 23 u</p>
 
-                               <div class="flex gap-4 my-2">
+                               <div class="flex flex-wrap gap-4 my-2">
                                     <label class="flex items-center"><input type="radio" name="postOpOrderType" value="keepRange" checked onchange="togglePostOpOrder('keepRange')"> Keep DTX Range</label>
                                     <label class="flex items-center"><input type="radio" name="postOpOrderType" value="scheduled" onchange="togglePostOpOrder('scheduled')"> Scheduled Insulin</label>
                                </div>
